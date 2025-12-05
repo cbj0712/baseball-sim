@@ -1,5 +1,8 @@
 package com.lsg.baseball.player.domain.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Position {
     P("P", "투수"),
     C("C", "포수"),
@@ -18,9 +21,5 @@ public enum Position {
     Position(String label, String description) {
         this.label = label;
         this.description = description;
-    }
-
-    public String getLabel() {
-        return label;
     }
 }

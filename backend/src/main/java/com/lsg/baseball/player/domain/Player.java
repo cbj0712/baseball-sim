@@ -2,6 +2,7 @@ package com.lsg.baseball.player.domain;
 
 import com.lsg.baseball.player.domain.enums.*;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 // @Builder
 @Table(name = "players")

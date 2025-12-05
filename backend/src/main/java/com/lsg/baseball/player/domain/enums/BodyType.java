@@ -1,5 +1,8 @@
 package com.lsg.baseball.player.domain.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum BodyType {
     SLIM("SLIM", "마른 체형"),
     AVERAGE("AVERAGE", "보통 체형"),
@@ -12,9 +15,5 @@ public enum BodyType {
     BodyType(String label, String description) {
         this.label = label;
         this.description = description;
-    }
-
-    public String getLabel() {
-        return label;
     }
 }

@@ -1,5 +1,8 @@
 package com.lsg.baseball.player.domain.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum ArmSlot {
     OVERHAND("OVERHAND", "오버핸드"),
     THREE_QUARTER("THREE_QUARTER", "쓰리쿼터"),
@@ -12,9 +15,5 @@ public enum ArmSlot {
     ArmSlot(String label, String description) {
         this.label = label;
         this.description = description;
-    }
-
-    public String getLabel() {
-        return label;
     }
 }

@@ -3,10 +3,13 @@ package com.lsg.baseball.player.domain;
 import com.lsg.baseball.player.domain.enums.Position;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Converter
@@ -20,19 +23,34 @@ public class SubPositionsConverter implements AttributeConverter<List<Position>,
         }
 
         return attribute.stream()
-                .map(Position::name)
+                .filter(Objects::nonNull)
+                .map(Enum::name)
+                .distinct()
                 .collect(Collectors.joining(DELIMITER));
     }
 
     @Override
     public List<Position> convertToEntityAttribute(String dbData) {
-        if (dbData == null || dbData.isEmpty()) {
+        if (dbData == null || dbData.isBlank()) {
             return Collections.emptyList();
         }
 
         return Arrays.stream(dbData.split(DELIMITER))
                 .map(String::trim)
-                .map(Position::valueOf)
-                .collect(Collectors.toList());
+                .filter(token -> !token.isEmpty())
+                .map(this::toPositionSafe)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    private Position toPositionSafe(String value) {
+        try {
+            return Position.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            Logger log = LoggerFactory.getLogger(SubPositionsConverter.class);
+            log.warn("Unknown position in sub_positions: {}", value);
+
+            return null;
+        }
     }
 }

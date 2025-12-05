@@ -1,5 +1,8 @@
 package com.lsg.baseball.player.domain.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum BatHand {
     R("R", "우타"),
     L("L", "좌타"),
@@ -11,9 +14,5 @@ public enum BatHand {
     BatHand(String label, String description) {
         this.label = label;
         this.description = description;
-    }
-
-    public String getLabel() {
-        return label;
     }
 }

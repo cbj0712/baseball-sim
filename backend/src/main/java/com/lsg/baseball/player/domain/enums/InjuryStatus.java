@@ -1,5 +1,8 @@
 package com.lsg.baseball.player.domain.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum InjuryStatus {
     HEALTHY("HEALTHY", "건강"),
     DAY_TO_DAY("DAY_TO_DAY", "일단 결장 필요"),
@@ -13,9 +16,5 @@ public enum InjuryStatus {
     InjuryStatus(String label, String description) {
         this.label = label;
         this.description = description;
-    }
-
-    public String getLabel() {
-        return label;
     }
 }
