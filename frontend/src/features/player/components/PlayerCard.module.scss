@@ -1,0 +1,122 @@
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    padding: 10px 12px;
+    border-radius: 14px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.06);
+    cursor: pointer;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.08s ease, background-color 0.16s ease;
+
+    &:hover {
+        border-color: #c7d2fe;
+        background-color: #eef2ff;
+        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.12), 0 0 0 1px rgba(79, 70, 229, 0.08);
+        transform: translateY(-1px);
+    }
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.nameRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.positionBadge {
+    padding: 2px 6px;
+    border-radius: 999px;
+    background-color: #eef2ff;
+    border: 1px solid #c7d2fe;
+    font-size: 10px;
+    font-weight: 500;
+    color: #4f46e5;
+}
+
+.metaRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 11px;
+}
+
+.meta {
+    color: #6b7280;
+}
+
+.metaAccent {
+    color: #4b5563;
+}
+
+.right {
+    text-align: right;
+    min-width: 52px;
+}
+
+.ovrLabel {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9ca3af;
+}
+
+.ovrValue {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 2px;
+    min-width: 42px;
+    padding: 2px 8px;
+
+    border-radius: 999px;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    color: #111827;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.ovrValueTierS {
+    background-color: #eef2ff;
+    border-color: #c7d2fe;
+    color: #4f46e5;
+}
+
+.ovrValueTierA {
+    background-color: #ecfeff;
+    border-color: #a5f3fc;
+    color: #0ea5e9;
+}
+
+.ovrValueTierB {
+    background-color: #ecfdf3;
+    border-color: #bbf7d0;
+    color: #16a34a;
+}
+
+.ovrValueTierC {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    color: #b91c1c;
+}

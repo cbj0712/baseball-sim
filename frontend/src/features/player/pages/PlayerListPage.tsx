@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { fetchPlayers } from '../api/playerApi';
 import type { PlayerSummaryResponse } from '../types/player';
 import { PlayerCard } from '../components/PlayerCard';
-import './PlayerListPage.css';
+import styles from './PlayerListPage.module.scss';
 
 export function PlayerListPage() {
     const [players, setPlayers] = useState<PlayerSummaryResponse[]>([]);
@@ -54,18 +54,72 @@ export function PlayerListPage() {
     }
 
     return (
-        <div className='player-page'>
-            <section className='player-page__list'>
+        <section className={styles.section}>
+            <header className={styles.header}>
+                <div>
+                    <h1 className={styles.title}>선수 관리</h1>
+                    <p className={styles.subtitle}>
+                        구단 보유 선수의 능력치를 한눈에 확인하고 관리합니다
+                    </p>
+                </div>
+
+                <div className={styles.meta}>
+                    <span className={styles.metaLabel}>Roster</span>
+                    <span className={styles.metaValue}>
+                        {filtered.length}명 / 전체 {players.length}명
+                    </span>
+                </div>
+            </header>
+
+            <div className={styles.filters}>
+                <input 
+                    type='text'
+                    className={styles.searchInput}
+                    placeholder='선수 이름 검색'
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                />
+            </div>
+
+            <div className={styles.content}>
                 {
-                    filtered.map((player) => (
-                        <PlayerCard 
-                            key={player.id}
-                            player={player}
-                            onClick={handleCardClick}
-                        />
-                    ))
+                    loading && <div className={styles.loading}>선수 목록을 불러오는 중...</div>
                 }
-            </section>
-        </div>
+
+                {
+                    !loading && error && (
+                        <div className={styles.error}>
+                            {error}
+                        </div>
+                    )
+                }
+
+                {
+                    !loading && !error && filtered.length === 0 && (
+                        <div className={styles.empty}>
+                            조건에 맞는 선수가 없습니다
+                        </div>
+                    )
+                }
+
+                {
+                    !loading && !error && filtered.length > 0 && (
+                        <div className={styles.list}>
+                            {
+                                filtered.map((player) => (
+                                    <PlayerCard 
+                                        key={player.id}
+                                        player={player}
+                                        onClick={(id) => {
+                                            console.log('선수 상세로 이동', id);
+                                        }}
+                                    />
+                                ))
+                            }
+                        </div>
+                    )
+                }
+            </div>
+        </section>
     )
 }

@@ -1,5 +1,5 @@
 import type { PlayerSummaryResponse } from '../types/player';
-import './PlayerCard.css';
+import styles from './PlayerCard.module.scss';
 
 interface PlayerCardProps {
     player: PlayerSummaryResponse;
@@ -7,20 +7,42 @@ interface PlayerCardProps {
 }
 
 export function PlayerCard({ player, onClick }: PlayerCardProps) {
-    const handleClick = () => {
-        if (onClick) {
-            onClick(player.id);
-        }
-    }
+    const { id, name, age, overall, mainPosition, mainPositionDescription, throwHandDescription, batHandDescription, armSlotDescription } = player;
+    const positionLabel = mainPositionDescription ?? mainPosition;
+
+    const getOverTierClass = (overall: number): string => {
+        if (overall >= 90)
+            return styles.ovrValueTierS;
+        if (overall >= 80)
+            return styles.ovrValueTierA;
+        if (overall >= 70)
+            return styles.ovrValueTierB;
+
+        return styles.ovrValueTierC;
+    };
 
     return (
-        <div className='player-card' onClick={handleClick}>
-            <div>
-                <p> {player.name} </p>
-                <p> {player.mainPositionDescription} ({player.age}세)</p>
-                <p> {player.throwHandDescription}{player.batHandDescription} / {player.armSlotDescription ?? '-'} </p>
-                <p> OVR {player.overall} </p>
+        <article
+            className={styles.card}
+            onClick={() => onClick?.(id)}
+            role='button'
+        >
+            <div className={styles.left}>
+                <div className={styles.nameRow}>
+                    <span className={styles.name}>{name}</span>
+                    <span className={styles.positionBadge}>{positionLabel}</span>
+                </div>
+                <div className={styles.metaRow}>
+                    <span className={styles.meta}>
+                        {age}세 · {throwHandDescription ?? ''}{batHandDescription ? `/${batHandDescription}` : ''}
+                    </span>
+                </div>
             </div>
-        </div>
+
+            <div className={styles.right}>
+                <span className={styles.ovrLabel}>OVR</span>
+                <span className={`${styles.ovrValue} ${getOverTierClass(overall)}`}>{overall}</span>
+            </div>
+        </article>
     )
 }
