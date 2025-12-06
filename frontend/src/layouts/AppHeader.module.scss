@@ -1,0 +1,133 @@
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-bottom: 1px solid #e5e7eb;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+}
+
+.inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 56px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-sizing: border-box;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: radial-gradient(
+        circle at 30% 20%,
+        #a5b4fc,
+        #6366f1 45%,
+        #312e81
+    );
+    color: #f9fafb;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brandText {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.productName {
+    font-size: 12px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.productSub {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 12px;
+    color: #6b7280;
+
+    @media(max-width: 720px) {
+        display: none;
+    }
+}
+
+.navItem {
+    padding-bottom: 4px;
+    border: none;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.18s ease, border-color 0.18s ease;
+
+    &:hover {
+        color: #111827;
+    }
+}
+
+.navItemActive {
+    color: #4f46e5;
+    border-color: #4f46e5;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+}
+
+.seasonBadge {
+    border-radius: 999px;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    padding: 4px 10px;
+    color: #4f46e5;
+}
+
+.profileRight {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.profileAvatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.profileName {
+    color: #111827;
+
+    @media (max-width: 640px) {
+        display: none;
+    }
+}
