@@ -13,10 +13,20 @@ export function AppHeader() {
                 </div>   
 
                 <nav className={styles.nav}>
-                    <button className={`${styles.navItem} ${styles.navItemActive}`}> 선수 </button>
-                    <button className={styles.navItem}>구단</button>
-                    <button className={styles.navItem}>경기일정</button>
-                    <button className={styles.navItem}>재정</button>
+                    <ul className={styles.navList}>
+                        <li>
+                            <button className={`${styles.navItem} ${styles.navItemActive}`} type='button'> 선수 </button>
+                        </li>
+                        <li>
+                            <button className={styles.navItem} type='button'>구단</button>
+                        </li>
+                        <li>
+                            <button className={styles.navItem} type='button'>경기일정</button>
+                        </li>
+                        <li>
+                            <button className={styles.navItem} type='button'>재정</button>
+                        </li>
+                    </ul>
                 </nav> 
 
                 <div className={styles.profile}>

@@ -2,7 +2,6 @@ export interface PlayerSummaryResponse {
     id: number;
     name: string;
     mainPosition: string;
-
     overall: number;
     age: number;
 
