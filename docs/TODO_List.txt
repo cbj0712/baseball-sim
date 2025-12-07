@@ -1,0 +1,298 @@
+🧩 Sprint 1 (2주) – 프로젝트 골조 + 기본 도메인 조회
+🎯 스프린트 목표
+
+FE/BE 공통 기반 세팅
+
+DB 스키마 1차 버전 확정 및 마이그레이션 적용
+
+리그 / 시즌 / 팀 / 선수 목록/상세 조회까지 “읽기 전용” API + 화면 구성
+
+1. 백엔드 작업 (Spring + PostgreSQL)
+1-1. 프로젝트 & 인프라 베이스
+
+ Spring Boot 프로젝트 생성
+
+Gradle 설정, 패키지 구조 기본 정리 (domain, application, presentation 등)
+
+ PostgreSQL 연결 & 기본 설정
+
+로컬 DB 세팅, application.yml 분리(dev/prod)
+
+ JPA 매핑 or Query 방식 선택 후 뼈대 구성
+
+ Flyway/Liquibase 같은 마이그레이션 툴 도입 (DDL 버전 관리)
+
+1-2. 1차 DB 스키마 정의 & 마이그레이션
+
+ 테이블 생성 (Phase 1 최소 세트)
+
+League
+
+Season
+
+Team
+
+Stadium
+
+Player
+
+ 기본 예시 데이터 시드 (SQL or 마이그레이션 스크립트)
+
+리그 1~2개
+
+팀 몇 개
+
+팀별 선수 10~20명 정도 (테스트용)
+
+1-3. 리그/시즌/팀/선수 조회 API
+
+ GET /api/v1/leagues
+
+ GET /api/v1/leagues/{leagueId}
+
+ GET /api/v1/seasons?leagueId=...
+
+ GET /api/v1/teams?leagueId=&seasonId=... (일단 순위 없이 팀 리스트 정도)
+
+ GET /api/v1/teams/{teamId}
+
+ GET /api/v1/teams/{teamId}/players
+
+ GET /api/v1/players/{playerId}
+
+1-4. 공통 응답 포맷 & 에러 핸들링
+
+ ApiResponse<T> 형태 통일
+
+ 기본 예외 처리 (NOT_FOUND, VALIDATION_ERROR 등)
+
+2. 프론트엔드 작업 (React + TypeScript)
+2-1. 프로젝트 베이스 세팅
+
+ Vite + React + TypeScript 프로젝트 생성
+
+ 라우팅 구조 설계 (예: react-router)
+
+/leagues
+
+/teams
+
+/teams/:teamId
+
+/players/:playerId
+
+ 스타일 방식 채택
+
+CSS-in-JS or Tailwind 등, 앞에서 얘기한 방향으로 정리
+
+ HTTP 클라이언트로 Axios 세팅
+
+베이스 URL, 인터셉터(에러/토큰 핸들링 골조만)
+
+2-2. 기본 화면 구현 (읽기 전용)
+
+ 리그 목록 페이지
+
+리그명, 국가, 시즌 수 정도
+
+ 리그 선택 → 소속 팀 목록 페이지
+
+팀명, 줄임명, 연고지, 홈구장 이름 정도
+
+ 팀 상세 페이지 (1차 버전)
+
+팀 기본 정보(이름, 줄임명, 연고지, 홈구장, 로고)
+
+선수 목록(이름, 포지션, 국적, 주손/타격손, OVR 정도)
+
+ 선수 상세 페이지 (1차 버전)
+
+기본 정보 + 주요 능력치 몇 개만 표시
+
+2-3. 공통 컴포넌트/UX
+
+ 공통 레이아웃 (헤더/사이드바/메인 영역)
+
+ 로딩/에러 표시 컴포넌트
+
+ 기본 테이블/리스트 스타일 정의
+
+3. 이 스프린트의 “완료 상태 (Definition of Done)”
+
+리그/팀/선수 데이터를 DB → API → 프론트까지 한 바퀴 돌려서 본다.
+
+화면에서:
+
+리그 선택 → 팀 목록 → 팀 상세 → 선수 상세로 들어갈 수 있다.
+
+아직:
+
+유저 개념(내 구단), 로스터 편집, 경기 진행은 없음
+→ 그냥 “데이터 브라우저” 단계까지만.
+
+⚾ Sprint 2 (2주) – 내 구단 + 1군/2군 로스터 + 시즌/순위 골조
+🎯 스프린트 목표
+
+“유저가 구단을 맡는” 개념 도입
+
+1군/2군 로스터 구조 만들고, 기본 편집 가능하게
+
+TeamSeason 도입으로 시즌/순위/기본 재정 골조 세팅
+
+1. 백엔드 작업
+1-1. 유저/소유권/인증
+
+ User 엔티티/테이블 생성
+
+ UserTeamOwnership 테이블/엔티티 생성
+
+ 간단한 인증 로직 (JWT)
+
+POST /auth/login (MVP는 심플하게 가도 됨)
+
+ “내 구단” 조회 API
+
+GET /api/v1/me/teams (현재 유저의 팀 목록)
+
+“메인 팀” 1개 기준도 같이 설계
+
+1-2. 시즌/팀 시즌 상태
+
+ TeamSeason 테이블 도입
+
+team_id, season_id, wins, losses, draws, rank, revenue/expense 기본 필드
+
+ GET /api/v1/seasons/{seasonId}/standings
+
+팀별 승/패/순위 조회
+
+MVP에서는 rank 계산 간단한 로직으로
+
+1-3. 로스터(1군/2군)
+
+ TeamRoster 테이블
+
+team_season_id, player_id, squad_level(FIRST/SECOND), is_active
+
+ 로스터 조회 API
+
+GET /api/v1/teams/{teamId}/seasons/{seasonId}/roster?squadLevel=FIRST|SECOND|ALL
+
+ 로스터 편집 API (내 구단만 허용)
+
+PUT /api/v1/teams/{teamId}/seasons/{seasonId}/roster
+
+바디: 선수별 squad_level 목록 or 변경 명령
+
+2. 프론트엔드 작업
+2-1. 유저/내 구단 UX
+
+ 로그인 화면 (아주 심플한 수준)
+
+ “내 구단 선택” 화면
+
+내가 가진 팀들 목록
+
+메인 팀 선택, 이후 기본 컨텍스트로 사용
+
+2-2. 구단 상세(내 구단 모드) 확장
+
+▷ 팀 상세 페이지에서:
+▶ 내가 소유한 팀일 경우:
+1군/2군 탭/토글
+로스터 편집 UI (드래그&드롭 or 버튼 기반 승격/강등)
+
+▶ 남의 구단일 경우:
+읽기 전용 선수 목록만
+
+2-3. 시즌/순위 UI
+
+▶ 시즌 선택 컴포넌트 (현재 시즌 기반)
+
+▶ 시즌 순위표 페이지
+팀명, 승/패/승률, 간단한 정렬
+
+3. 이 스프린트의 완료 상태
+
+▶ 유저가 로그인해서:
+“내 구단”을 선택하고,
+내 구단의 1군/2군 로스터를 보고,
+간단한 편집(승격/강등)이 가능하다.
+
+▶ 리그/시즌 화면에서:
+현재 시즌 팀 순위표를 볼 수 있다.
+
+
+🏟️ Sprint 3 (2주) – 경기 시뮬레이션 + 시즌 루프(최소 버전)
+🎯 스프린트 목표
+“경기를 돌려서 결과가 나오고 → 시즌 성적/순위가 갱신되는” 루프 구현
+이닝별 스코어까지 보여주는 최소 경기 엔진
+
+1. 백엔드 작업
+1-1. 경기/일정 도메인 정리
+
+▶ Game 테이블 정리
+season_id, league_id, home_team_id, away_team_id, stadium_id, date_time, status, home_score, away_score
+
+▶ Inning 테이블 1차 버전
+game_id, number, half, runs_home, runs_away
+
+▶ 일정 생성 로직 (간단 버전)
+한 시즌에 팀들끼리 일정 수만큼 맞붙는 스케줄 자동 생성
+POST /api/v1/seasons/{seasonId}/schedule/generate 정도
+
+1-2. 경기 시뮬레이션 (간단 엔진)
+
+▶ POST /api/v1/games/{gameId}/simulate
+현재 로스터/선수 능력치를 기반으로:
+홈/원정 점수 랜덤 + 능력치 가중치 방식
+이닝별 득점(간단) 생성
+
+▶ 경기 시뮬 결과 저장
+Game.home_score, Game.away_score
+Inning 레코드들
+
+▶ TeamSeason 승/패/득점/실점 업데이트
+경기 끝나면 해당 팀들의 wins/losses/runs_scored/runs_allowed 누적
+간단한 순위 재계산 로직 (승률 우선)
+
+1-3. 경기/결과 조회 API
+
+▶ GET /api/v1/seasons/{seasonId}/games?teamId=...
+시즌 경기 일정/결과 리스트
+
+▶ GET /api/v1/games/{gameId}
+경기 기본정보 + 스코어 + 상태
+
+▶ GET /api/v1/games/{gameId}/innings
+이닝별 득점 상세
+
+2. 프론트엔드 작업
+2-1. 경기 일정/결과 UI
+
+▶ 시즌 일정/결과 페이지
+팀 선택 → 해당 팀의 경기 목록 (날짜, 상대, 홈/원정, 스코어)
+경기가 아직 미진행이면 “시뮬레이션” 버튼
+
+▶ 경기 상세 페이지
+기본 정보 (홈/원정, 날짜, 경기장)
+최종 스코어
+이닝별 득점 박스 스코어
+
+2-2. 경기 진행 UX
+
+▶ 경기 시뮬레이션 트리거
+경기 상세에서 “경기 진행” 버튼 → API 호출 → 결과 리프레시
+
+▶ 내 구단 일정에서:
+아직 안 치른 경기들 리스트업
+한 경기씩 시뮬 or 여러 경기 한번에 시뮬(나중에)
+
+3. 이 스프린트의 완료 상태
+
+유저가:
+
+내 구단을 선택하고,
+시즌 일정에서 경기를 골라 시뮬레이션을 돌리면,
+경기 결과/스코어/이닝별 득점을 볼 수 있고,
+그 결과가 TeamSeason의 승/패/순위에 반영된다.

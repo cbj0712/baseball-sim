@@ -37,41 +37,198 @@ INSERT INTO players (
     created_at,
     updated_at
 ) VALUES (
-           1,
-           '홍길동',
-           '1998-05-10',
-           'KOR',
-           10,
-           185,
-           85,
-           'MUSCULAR',       -- BodyType enum
-           'P',              -- Position enum
-           NULL,          -- sub positions: 예) 릴리버/마무리
-           'R',              -- ThrowHand
-           'R',              -- BatHand
-           'OVERHAND',       -- ArmSlot
-           80,  -- condition
-           10,  -- fatigue
-           90,  -- fitness
-           'HEALTHY',        -- InjuryStatus
-           NULL,             -- injury_days_left
-           75,               -- satisfaction
-           80,               -- loyalty
-           88,               -- potential
-           82,               -- overall
-           85,               -- stamina
-           78,               -- composure
-           70,               -- hit_contact
-           65,               -- hit_power
-           60,               -- plate_discipline
-           55,               -- baserunning
-           68,               -- fielding
-           72,               -- arm_strength
-           150,              -- pitch_velocity (km/h 가정)
-           80,               -- pitch_control
-           85,               -- pitch_stuff
-           75,               -- breaking_ball
-           70,               -- pickoff
-           NOW(),            -- created_at
-           NOW()             -- updated_at
-       );
+    1,
+    '홍길동',
+    '1998-05-10',
+    'KOR',
+    10,
+    185,
+    85,
+    'MUSCULAR',
+    'P',
+    NULL,
+    'R',
+    'R',
+    'OVERHAND',
+    80,
+    10,
+    90,
+    'HEALTHY',
+    NULL,
+    75,
+    80,
+    88,
+    82,
+    85,
+    78,
+    70,
+    65,
+    60,
+    55,
+    68,
+    72,
+    150,
+    80,
+    85,
+    75,
+    70,
+    NOW(),
+    NOW()
+);
+
+INSERT INTO players (
+    player_id,
+    name,
+    birth_date,
+    nationality,
+    uniform_number,
+    height_cm,
+    weight_kg,
+    body_type,
+    main_position,
+    sub_positions,
+    throw_hand,
+    bat_hand,
+    arm_slot,
+    condition,
+    fatigue,
+    fitness,
+    injury_status,
+    injury_days_left,
+    satisfaction,
+    loyalty,
+    potential,
+    overall,
+    stamina,
+    composure,
+    hit_contact,
+    hit_power,
+    plate_discipline,
+    baserunning,
+    fielding,
+    arm_strength,
+    pitch_velocity,
+    pitch_control,
+    pitch_stuff,
+    breaking_ball,
+    pickoff,
+    created_at,
+    updated_at
+) VALUES (
+             2,
+             '구자욱',
+             '1993-03-04',
+             'KOR',
+             5,
+             191,
+             85,
+             'MUSCULAR',
+             'LF',
+             NULL,
+             'R',
+             'L',
+             'OVERHAND',
+             80,
+             10,
+             90,
+             'HEALTHY',
+             NULL,
+             75,
+             80,
+             88,
+             99,
+             85,
+             78,
+             70,
+             65,
+             60,
+             55,
+             68,
+             72,
+             150,
+             80,
+             85,
+             75,
+             70,
+             NOW(),
+             NOW()
+         );
+
+INSERT INTO players (
+    player_id,
+    name,
+    birth_date,
+    nationality,
+    uniform_number,
+    height_cm,
+    weight_kg,
+    body_type,
+    main_position,
+    sub_positions,
+    throw_hand,
+    bat_hand,
+    arm_slot,
+    condition,
+    fatigue,
+    fitness,
+    injury_status,
+    injury_days_left,
+    satisfaction,
+    loyalty,
+    potential,
+    overall,
+    stamina,
+    composure,
+    hit_contact,
+    hit_power,
+    plate_discipline,
+    baserunning,
+    fielding,
+    arm_strength,
+    pitch_velocity,
+    pitch_control,
+    pitch_stuff,
+    breaking_ball,
+    pickoff,
+    created_at,
+    updated_at
+) VALUES (
+             3,
+             '조병준',
+             '2001-07-12',
+             'KOR',
+             10,
+             169,
+             60,
+             'MUSCULAR',
+             'SS',
+             NULL,
+             'R',
+             'R',
+             'SIDEARM',
+             80,
+             10,
+             90,
+             'HEALTHY',
+             NULL,
+             75,
+             80,
+             88,
+             71,
+             85,
+             78,
+             70,
+             65,
+             60,
+             55,
+             68,
+             72,
+             150,
+             80,
+             85,
+             75,
+             70,
+             NOW(),
+             NOW()
+         );
+

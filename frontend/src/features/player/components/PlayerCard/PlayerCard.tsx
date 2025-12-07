@@ -1,4 +1,4 @@
-import type { PlayerSummaryResponse } from '../types/player';
+import type { PlayerSummaryResponse } from '../../types/player';
 import styles from './PlayerCard.module.scss';
 
 interface PlayerCardProps {
@@ -44,5 +44,5 @@ export function PlayerCard({ player, onClick }: PlayerCardProps) {
                 <span className={`${styles.ovrValue} ${getOverTierClass(overall)}`}>{overall}</span>
             </div>
         </article>
-    )
+    );
 }

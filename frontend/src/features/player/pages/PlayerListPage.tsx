@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { fetchPlayers } from '../api/playerApi';
 import type { PlayerSummaryResponse } from '../types/player';
-import { PlayerCard } from '../components/PlayerCard';
+import { PlayerCard } from '../components/PlayerCard/PlayerCard';
 import styles from './PlayerListPage.module.scss';
+import { LineupAndPitchingPanel } from '../components/LineupAndPicthingPanel/LineupAndPitchingPanel';
 
 export function PlayerListPage() {
     const [players, setPlayers] = useState<PlayerSummaryResponse[]>([]);
@@ -120,6 +121,7 @@ export function PlayerListPage() {
                     )
                 }
             </div>
+            <LineupAndPitchingPanel />
         </section>
     )
 }
