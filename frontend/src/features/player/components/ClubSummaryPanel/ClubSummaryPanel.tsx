@@ -10,7 +10,7 @@ interface ClubSummaryPanelProps {
 export function ClubSummaryPanel({totalPlayers=3, avgOverall=84, payroll=10000000000}: ClubSummaryPanelProps) {
     return (
         <aside className={styles.panel}>
-            <h2 className={styles.title}>구단 요약</h2>
+            <h2 className={styles.title}>선수단 요약</h2>
 
             <div className={styles.stats}>
                 <div className={styles.statRow}>
