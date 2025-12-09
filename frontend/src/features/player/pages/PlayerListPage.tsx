@@ -4,6 +4,9 @@ import type { PlayerSummaryResponse } from '../types/player';
 import { PlayerCard } from '../components/PlayerCard/PlayerCard';
 import styles from './PlayerListPage.module.scss';
 import { LineupAndPitchingPanel } from '../components/LineupAndPicthingPanel/LineupAndPitchingPanel';
+import type { PositionGroup, StatTier, AgeBand } from '../lib/PlayerFilter';
+import { toggleFilterValue, applyPlayerFilters } from '../lib/PlayerFilter';
+import { PlayerFilterBar } from '../components/PlayerFilterBar/PlayerFilterBar';
 
 export function PlayerListPage() {
     const [players, setPlayers] = useState<PlayerSummaryResponse[]>([]);
@@ -11,6 +14,12 @@ export function PlayerListPage() {
     const [keyword, setKeyword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    
+    const [positionGroups, setPositionGroups] = useState<PositionGroup[]>([]);
+    const [statTiers, setStatTiers] = useState<StatTier[]>([]);
+    const [ageBands, setAgeBands] = useState<AgeBand[]>([]);
+
+    const [filtersOpen, setFiltersOpen] = useState(true);
 
     useEffect(() => {
         const load = async () => {
@@ -34,17 +43,10 @@ export function PlayerListPage() {
     }, []);
 
     useEffect(() => {
-        if (!keyword.trim()) {
-            setFiltered(players);
-            return;
-        }
+        const next = applyPlayerFilters(players, { keyword, positionGroups, statTiers, ageBands });
 
-        const lower = keyword.toLowerCase();
-
-        setFiltered(
-            players.filter((p) => p.name.toLowerCase().includes(lower)),
-        );
-    }, [keyword, players]);
+        setFiltered(next);
+    }, [players, keyword, positionGroups, statTiers, ageBands]);
 
     const handleCardClick = (id: number) => {
         console.log('선수 상세로 이동', id);
@@ -63,7 +65,15 @@ export function PlayerListPage() {
                         구단 보유 선수의 능력치를 한눈에 확인하고 관리합니다
                     </p>
                 </div>
-
+                <div className={styles.headerRight}>
+                    <button
+                        type='button'
+                        className={styles.filterToggleButton}
+                        onClick={() => setFiltersOpen((prev) => !prev)}
+                    >
+                        { filtersOpen ? '필터 접기' : '필터 펼치기'}
+                    </button>
+                </div>
                 <div className={styles.meta}>
                     <span className={styles.metaLabel}>Roster</span>
                     <span className={styles.metaValue}>
@@ -72,14 +82,21 @@ export function PlayerListPage() {
                 </div>
             </header>
 
-            <div className={styles.filters}>
-                <input 
-                    type='text'
-                    className={styles.searchInput}
-                    placeholder='선수 이름 검색'
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                />
+            <div className={styles.filtersArea}>
+                {
+                    filtersOpen && (
+                        <PlayerFilterBar 
+                            keyword={keyword}
+                            onKeywordChange={setKeyword}
+                            positionGroups={positionGroups}
+                            onPositionGroupsChange={setPositionGroups}
+                            statTiers={statTiers}
+                            onStatTiersChange={setStatTiers}
+                            ageBands={ageBands}
+                            onAgeBandsChange={setAgeBands}
+                        />
+                    )
+                }
             </div>
 
             <div className={styles.content}>
