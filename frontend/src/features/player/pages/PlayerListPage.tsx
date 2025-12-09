@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchPlayers } from '../api/playerApi';
+import { fetchPlayers } from '@/api/playerApi';
 import type { PlayerSummaryResponse } from '../types/player';
 import { PlayerCard } from '../components/PlayerCard/PlayerCard';
 import styles from './PlayerListPage.module.scss';

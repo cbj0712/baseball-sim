@@ -1,5 +1,5 @@
-import { httpClient } from '@/shared/lib/httpClient';
-import type { PlayerDetailResponse, PlayerSummaryResponse } from '../types/player';
+import { httpClient } from './httpClient';
+import type { PlayerDetailResponse, PlayerSummaryResponse } from '@/features/player/types/player';
 
 interface ApiResponse<T> {
     success: boolean;
