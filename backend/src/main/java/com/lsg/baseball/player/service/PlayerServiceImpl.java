@@ -3,6 +3,7 @@ package com.lsg.baseball.player.service;
 import com.lsg.baseball.common.api.ErrorCode;
 import com.lsg.baseball.common.exception.BusinessException;
 import com.lsg.baseball.player.domain.Player;
+import com.lsg.baseball.player.domain.command.PlayerCreateCommand;
 import com.lsg.baseball.player.dto.request.PlayerCreateRequest;
 import com.lsg.baseball.player.dto.response.PlayerResponse;
 import com.lsg.baseball.player.repository.PlayerRepository;
@@ -11,60 +12,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
 
     @Override
+    @Transactional
     public PlayerResponse createPlayer(PlayerCreateRequest request) {
-        Player player = playerRepository.save(toEntity(request));
+        PlayerCreateCommand command = PlayerCreateCommand.from(request);
+        Player player = Player.create(command);
+
+        playerRepository.save(player);
 
         return toResponse(player);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public PlayerResponse getPlayer(Long playerId) {
         Player player = playerRepository.findById(playerId).orElseThrow(() -> new BusinessException(ErrorCode.PLAYER_NOT_FOUND));
 
         return toResponse(player);
-    }
-
-    private Player toEntity(PlayerCreateRequest request){
-        Player player = new Player();
-
-        player.setName(request.getName());
-        player.setBirthDate(request.getBirthDate());
-        player.setNationality(request.getNationality());
-        player.setUniformNumber(request.getUniformNumber());
-
-        player.setHeightCm(request.getHeightCm());
-        player.setWeightKg(request.getWeightKg());
-        player.setBodyType(request.getBodyType());
-
-        player.setMainPosition(request.getMainPosition());
-        player.setSubPositions(request.getSubPositions());
-        player.setThrowHand(request.getThrowHand());
-        player.setBatHand(request.getBatHand());
-        player.setArmSlot(request.getArmSlot());
-
-        player.setCondition(request.getCondition());
-        player.setFatigue(request.getFatigue());
-        player.setFitness(request.getFitness());
-
-        player.setInjuryStatus(request.getInjuryStatus());
-        player.setInjuryDaysLeft(request.getInjuryDaysLeft());
-
-        player.setSatisfaction(50);
-        player.setLoyalty(50);
-
-        player.setPotential(request.getPotential());
-        player.setOverall(request.getOverall());
-        player.setStamina(request.getStamina());
-        player.setComposure(request.getComposure());
-
-        return player;
     }
 
     private PlayerResponse toResponse(Player player){

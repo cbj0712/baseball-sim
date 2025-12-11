@@ -20,11 +20,6 @@ public class PlayerRepositoryTest {
     void saveAndSearchSubPositions() {
         Player player = createTestPlayer();
 
-        player.setSubPositions(List.of(
-                Position._3B,
-                Position.SS
-        ));
-
         Player saved = playerRepository.save(player);
 
         Player found = playerRepository.findById(saved.getId())
@@ -37,30 +32,23 @@ public class PlayerRepositoryTest {
     }
 
     private Player createTestPlayer() {
-        Player player = new Player();
+        Player player = Player.builder()
+            .name("홍길동")
+            .birthDate(LocalDate.of(1990, 1, 1))
+            .nationality("대한민국")
+            .heightCm(189)
+            .weightKg(68)
+            .bodyType(BodyType.AVERAGE)
+            .mainPosition(Position._1B)
+            .throwHand(ThrowHand.R)
+            .batHand(BatHand.S)
+            .armSlot(ArmSlot.SIDE_ARM)
+            .build();
 
-        player.setName("홍길동");
-        player.setBirthDate(LocalDate.of(1990, 1, 1));
-        player.setNationality("대한민국");
-        player.setUniformNumber(5);
-        player.setHeightCm(189);
-        player.setWeightKg(68);
-        player.setBodyType(BodyType.AVERAGE);
-        player.setMainPosition(Position._1B);
-        player.setThrowHand(ThrowHand.R);
-        player.setBatHand(BatHand.S);
-        player.setArmSlot(ArmSlot.SIDE_ARM);
-        player.setCondition(100);
-        player.setFatigue(5);
-        player.setFitness(100);
-        player.setInjuryStatus(InjuryStatus.HEALTHY);
-        player.setInjuryDaysLeft(0);
-        player.setSatisfaction(100);
-        player.setLoyalty(100);
-        player.setPotential(100);
-        player.setOverall(100);
-        player.setStamina(100);
-        player.setComposure(100);
+        player.changeSubPositions(List.of(
+                Position._3B,
+                Position.SS
+        ));
 
         return player;
     }

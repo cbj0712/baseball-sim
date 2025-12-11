@@ -18,15 +18,17 @@ public class PlayerCreateRequest {
     private LocalDate birthDate;
     @NotBlank
     private String nationality;
-    @PositiveOrZero
+    @Min(0)
     @Max(200)
     private Integer uniformNumber;
 
     @NotNull
-    @PositiveOrZero
+    @Min(150)
+    @Max(220)
     private Integer heightCm;
     @NotNull
-    @PositiveOrZero
+    @Min(40)
+    @Max(180)
     private Integer weightKg;
     @NotNull
     private BodyType bodyType;
@@ -43,30 +45,38 @@ public class PlayerCreateRequest {
     private ArmSlot armSlot;
 
     @NotNull
-    @PositiveOrZero
+    @Min(0)
+    @Max(100)
     private Integer condition;
     @NotNull
-    @PositiveOrZero
+    @Min(0)
+    @Max(100)
     private Integer fatigue;
     @NotNull
-    @PositiveOrZero
+    @Min(0)
+    @Max(100)
     private Integer fitness;
 
     @NotNull
     private InjuryStatus injuryStatus;
-    @PositiveOrZero
+    @Min(0)
+    @Max(1000)
     private Integer injuryDaysLeft;
 
     @NotNull
-    @PositiveOrZero
+    @Min(0)
+    @Max(100)
     private Integer potential;
     @NotNull
-    @PositiveOrZero
+    @Min(0)
+    @Max(100)
     private Integer overall;
     @NotNull
-    @PositiveOrZero
+    @Min(0)
+    @Max(100)
     private Integer stamina;
     @NotNull
-    @PositiveOrZero
+    @Min(0)
+    @Max(100)
     private Integer composure;
 }
