@@ -12,7 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest(properties = "spring.sql.init.mode=never")
-public class PlayerRepositoryTest {
+class PlayerRepositoryTest {
     @Autowired
     private PlayerRepository playerRepository;
 
