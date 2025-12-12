@@ -20,6 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -98,7 +99,51 @@ class PlayerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                 )
-                .andExpect(status().isCreated()) // or isOk()
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.id").value(1L))
+                .andExpect(jsonPath("$.data.name").value("홍길동"));
+    }
+
+    @DisplayName("선수 정보 반환")
+    @Test
+    @WithMockUser(username = "test-user")
+    void getPlayer_success() throws Exception {
+        Long playerId = 1L;
+
+        PlayerResponse response = PlayerResponse.builder()
+                .id(playerId)
+                .name("홍길동")
+                .birthDate(LocalDate.of(1995, 1, 1))
+                .nationality("대한민국")
+                .uniformNumber(10)
+                .heightCm(180)
+                .weightKg(80)
+                .bodyType(BodyType.MUSCULAR)
+                .mainPosition(Position.SS)
+                .subPositions(null)
+                .throwHand(ThrowHand.R)
+                .batHand(BatHand.R)
+                .armSlot(ArmSlot.OVER_HAND)
+                .condition(100)
+                .fatigue(0)
+                .fitness(100)
+                .injuryStatus(InjuryStatus.HEALTHY)
+                .injuryDaysLeft(0)
+                .satisfaction(50)
+                .loyalty(50)
+                .potential(80)
+                .overall(75)
+                .stamina(80)
+                .composure(70)
+                .build();
+
+        given(playerService.getPlayer(playerId)).willReturn(response);
+
+        mockMvc.perform(
+                        get("/api/players/{playerId}", playerId)
+                                .with(csrf())
+                )
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(1L))
                 .andExpect(jsonPath("$.data.name").value("홍길동"));
     }
