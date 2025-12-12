@@ -7,7 +7,6 @@ import jakarta.persistence.Converter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Converter(autoApply = false)
@@ -15,12 +14,12 @@ public class SubPositionsConverter implements AttributeConverter<List<Position>,
     private static final String DELIMITER = ",";
 
     @Override
-    public String convertToDatabaseColumn(List<Position> position) {
-        if (position == null || position.isEmpty()) {
+    public String convertToDatabaseColumn(List<Position> positions) {
+        if (positions == null || positions.isEmpty()) {
             return null;
         }
 
-        return position.stream()
+        return positions.stream()
                 .map(Position::getCode)
                 .collect(Collectors.joining(DELIMITER));
     }
@@ -34,8 +33,9 @@ public class SubPositionsConverter implements AttributeConverter<List<Position>,
         return Arrays.stream(dbData.split(DELIMITER))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
-                .map(Position::safeFromCode)
-                .flatMap(Optional::stream)
+                .map(code -> Position.safeFromCode(code)
+                        .orElseThrow(() -> new IllegalStateException("확인할 수 없는 포지션 코드입니다: " + code))
+                )
                 .distinct()
                 .collect(Collectors.toList());
     }
