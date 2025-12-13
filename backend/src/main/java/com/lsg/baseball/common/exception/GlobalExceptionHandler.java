@@ -2,7 +2,6 @@ package com.lsg.baseball.common.exception;
 
 import com.lsg.baseball.common.api.ApiResponse;
 import com.lsg.baseball.common.api.ErrorCode;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -23,7 +21,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(ApiResponse.error(errorCode));
+                .body(ApiResponse.error(errorCode, ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -43,7 +41,7 @@ public class GlobalExceptionHandler {
                         .getFieldErrors()
                         .stream()
                         .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                        .collect(Collectors.joining(","));
+                        .collect(Collectors.joining(", "));
 
         log.warn("[ValidationError] {}", errorMessage, ex);
 
@@ -51,7 +49,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(ApiResponse.error(errorCode));
+                .body(ApiResponse.error(errorCode, errorMessage));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -59,14 +57,14 @@ public class GlobalExceptionHandler {
         String errorMessage = ex.getConstraintViolations()
                         .stream()
                         .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
-                        .collect(Collectors.joining(","));
+                        .collect(Collectors.joining(", "));
 
-        log.warn("[ConstrainViolation] {}", errorMessage, ex);
+        log.warn("[ConstraintViolation] {}", errorMessage, ex);
 
         ErrorCode errorCode = ErrorCode.VALIDATION_ERROR;
 
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(ApiResponse.error(errorCode));
+                .body(ApiResponse.error(errorCode, errorMessage));
     }
 }

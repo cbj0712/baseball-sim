@@ -21,10 +21,16 @@ public abstract class BaseEntity {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+        prePersistHook();
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+        preUpdateHook();
     }
+
+    protected void prePersistHook() {}
+
+    protected void preUpdateHook() {}
 }

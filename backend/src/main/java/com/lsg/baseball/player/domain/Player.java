@@ -4,13 +4,16 @@ import com.lsg.baseball.common.entity.BaseEntity;
 import com.lsg.baseball.player.domain.command.PlayerCreateCommand;
 import com.lsg.baseball.player.domain.enums.*;
 import com.lsg.baseball.player.domain.support.SubPositionsConverter;
-import com.lsg.baseball.player.dto.request.PlayerCreateRequest;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,25 +26,35 @@ public class Player extends BaseEntity {
     private Long id;
     
     // 기본 정보: 이름, 생년월일, 국적, 등번호
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private LocalDate birthDate;
+    @Column(nullable = false)
     private String nationality;
+
+    @Min(0)
+    @Max(200)
     private Integer uniformNumber;
 
     // 피지컬: 키, 몸무게, 체형
-    @Column(name = "height_cm")
+    @Column(name = "height_cm", nullable = false)
+    @Min(150)
+    @Max(250)
     private int heightCm;
 
-    @Column(name = "weight_kg")
+    @Column(name = "weight_kg", nullable = false)
+    @Min(40)
+    @Max(150)
     private int weightKg;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "body_type")
+    @Column(name = "body_type", nullable = false)
     private BodyType bodyType;
 
     // 포지션 / 투타: 메인포지션, 서브포지션 리스트, 주손, 타격 위치, 투구폼
     @Enumerated(EnumType.STRING)
-    @Column(name = "main_position")
+    @Column(name = "main_position", nullable = false)
     private Position mainPosition;
 
     @Convert(converter = SubPositionsConverter.class)
@@ -49,36 +62,64 @@ public class Player extends BaseEntity {
     private List<Position> subPositions;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "throw_hand")
+    @Column(name = "throw_hand", nullable = false)
     private ThrowHand throwHand;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "bat_hand")
+    @Column(name = "bat_hand", nullable = false)
     private BatHand batHand;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "arm_slot")
+    @Column(name = "arm_slot", nullable = false)
     private ArmSlot armSlot;
 
     // 상태/멘탈: 컨디션, 피로도, 시즌 체력, 부상상태, 부상일수, 만족도, 충성도
+    @Column(nullable = false)
+    @Min(0)
+    @Max(100)
     private int condition;
+    @Column(nullable = false)
+    @Min(0)
+    @Max(100)
     private int fatigue;
+    @Column(nullable = false)
+    @Min(0)
+    @Max(100)
     private int fitness;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "injury_status")
+    @Column(name = "injury_status", nullable = false)
     private InjuryStatus injuryStatus;
 
-    @Column(name = "injury_days_left")
+    @Column(name = "injury_days_left", nullable = false)
+    @Min(0)
     private Integer injuryDaysLeft;
 
+    @Column(nullable = false)
+    @Min(0)
+    @Max(100)
     private int satisfaction;
+    @Column(nullable = false)
+    @Min(0)
+    @Max(100)
     private int loyalty;
     
     // 공통 능력치: 잠재력, 능력치, 스태미나, 침착도
+    @Column(nullable = false)
+    @Min(0)
+    @Max(100)
     private int potential;
+    @Column(nullable = false)
+    @Min(0)
+    @Max(100)
     private int overall;
+    @Column(nullable = false)
+    @Min(0)
+    @Max(100)
     private int stamina;
+    @Column(nullable = false)
+    @Min(0)
+    @Max(100)
     private int composure;
 
     @Builder
@@ -100,9 +141,9 @@ public class Player extends BaseEntity {
     }
 
     public static Player create(PlayerCreateCommand command) {
-        int potentialMax = randomInt(60,100);
+        int potentialMax = randomInt(60);
 
-        Player player =  Player.builder()
+        Player player = Player.builder()
                 .name(command.name())
                 .birthDate(command.birthDate())
                 .nationality(command.nationality())
@@ -167,12 +208,12 @@ public class Player extends BaseEntity {
         player.stamina =
                 command.stamina() != null
                     ? command.stamina()
-                    : randomInt(50,100);
+                    : randomInt(50);
 
         player.composure =
                 command.composure() != null
                     ? command.composure()
-                    : randomInt(50,100);
+                    : randomInt(50);
 
         return player;
     }
@@ -199,8 +240,8 @@ public class Player extends BaseEntity {
         this.subPositions = new ArrayList<>(positions);
     }
 
-    private static int randomInt(int minInclusive, int maxExclusive) {
-        return (int)(Math.random() * (maxExclusive - minInclusive + 1) + minInclusive);
+    private static int randomInt(int minInclusive) {
+        return ThreadLocalRandom.current().nextInt(minInclusive, 100+1);
     }
     
     // TODO: 게임 시뮬레이션 설계 후 세부 능력치(타자/투수별) 별도 객체로 추가 예정

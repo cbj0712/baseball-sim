@@ -19,7 +19,7 @@ public enum Position {
     LF("LF", "좌익수", PositionGroup.OUTFIELD),
     CF("CF", "중견수", PositionGroup.OUTFIELD),
     RF("RF", "우익수", PositionGroup.OUTFIELD),
-    DH("DH", "지명타자", PositionGroup.DESIGNATED_HITTER),;
+    DH("DH", "지명타자", PositionGroup.DESIGNATED_HITTER);
 
     private final String code;
     private final String description;
