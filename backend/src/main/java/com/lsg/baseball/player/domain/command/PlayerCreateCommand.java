@@ -11,8 +11,8 @@ public record PlayerCreateCommand (
         LocalDate birthDate,
         String nationality,
         Integer uniformNumber,
-        Integer heightCm,
-        Integer weightKg,
+        int heightCm,
+        int weightKg,
         BodyType bodyType,
         Position mainPosition,
         List<Position> subPositions,
@@ -27,7 +27,8 @@ public record PlayerCreateCommand (
         Integer potential,
         Integer overall,
         Integer stamina,
-        Integer composure
+        Integer composure,
+        Long teamId
 ) {
     public static PlayerCreateCommand from (PlayerCreateRequest request) {
         return new PlayerCreateCommand(
@@ -51,7 +52,8 @@ public record PlayerCreateCommand (
                 request.getPotential(),
                 request.getOverall(),
                 request.getStamina(),
-                request.getComposure()
+                request.getComposure(),
+                request.getTeamId()
         );
     }
 }

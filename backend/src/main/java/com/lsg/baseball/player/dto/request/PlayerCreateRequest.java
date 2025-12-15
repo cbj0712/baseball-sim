@@ -79,4 +79,6 @@ public class PlayerCreateRequest {
     @Min(0)
     @Max(100)
     private Integer composure;
+
+    private Long teamId;
 }
