@@ -3,6 +3,7 @@ package com.lsg.baseball.player.service;
 import com.lsg.baseball.common.api.ErrorCode;
 import com.lsg.baseball.common.exception.BusinessException;
 import com.lsg.baseball.player.domain.Player;
+import com.lsg.baseball.player.domain.PlayerFactory;
 import com.lsg.baseball.player.domain.command.PlayerCreateCommand;
 import com.lsg.baseball.player.domain.enums.*;
 import com.lsg.baseball.player.dto.request.PlayerCreateRequest;
@@ -86,7 +87,7 @@ class PlayerServiceImplTest {
     @DisplayName("getPlayer - 존재하는 선수 정보 반환")
     @Test
     void getPlayer_success() {
-        Player player = Player.create(PlayerCreateCommand.from(createRequest));
+        Player player = PlayerFactory.create(PlayerCreateCommand.from(createRequest));
         ReflectionTestUtils.setField(player, "id", 1L);
 
         given(playerRepository.findById(1L)).willReturn(Optional.of(player));

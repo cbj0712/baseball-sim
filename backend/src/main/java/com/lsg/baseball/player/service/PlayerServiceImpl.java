@@ -3,6 +3,7 @@ package com.lsg.baseball.player.service;
 import com.lsg.baseball.common.api.ErrorCode;
 import com.lsg.baseball.common.exception.BusinessException;
 import com.lsg.baseball.player.domain.Player;
+import com.lsg.baseball.player.domain.PlayerFactory;
 import com.lsg.baseball.player.domain.command.PlayerCreateCommand;
 import com.lsg.baseball.player.dto.request.PlayerCreateRequest;
 import com.lsg.baseball.player.dto.response.PlayerResponse;
@@ -21,11 +22,11 @@ public class PlayerServiceImpl implements PlayerService {
     @Transactional
     public PlayerResponse createPlayer(PlayerCreateRequest request) {
         PlayerCreateCommand command = PlayerCreateCommand.from(request);
-        Player player = Player.create(command);
 
-        playerRepository.save(player);
+        Player player = PlayerFactory.create(command);
+        Player saved = playerRepository.save(player);
 
-        return toResponse(player);
+        return toResponse(saved);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.lsg.baseball.player.domain;
 
 import com.lsg.baseball.common.entity.BaseEntity;
-import com.lsg.baseball.player.domain.command.PlayerCreateCommand;
 import com.lsg.baseball.player.domain.enums.*;
 import com.lsg.baseball.player.domain.support.SubPositionsConverter;
 import jakarta.persistence.*;
@@ -11,7 +10,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,19 +21,17 @@ import java.util.concurrent.ThreadLocalRandom;
         }
 )
 public class Player extends BaseEntity {
-    private static final int STAT_MAX = 100;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "player_id")
     private Long id;
     
     // 기본 정보: 이름, 생년월일, 국적, 등번호
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
     @Column(nullable = false)
     private LocalDate birthDate;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String nationality;
 
     private Integer uniformNumber;
@@ -123,80 +119,84 @@ public class Player extends BaseEntity {
         this.subPositions = new ArrayList<>();
     }
 
-    public static Player create(PlayerCreateCommand command) {
-        int potentialMax = randomStatFrom(60);
-
-        Player player = Player.builder()
-                .name(command.name())
-                .birthDate(command.birthDate())
-                .nationality(command.nationality())
-                .heightCm(command.heightCm())
-                .weightKg(command.weightKg())
-                .bodyType(command.bodyType())
-                .mainPosition(command.mainPosition())
-                .throwHand(command.throwHand())
-                .batHand(command.batHand())
-                .armSlot(command.armSlot())
-                .build();
-
-
-        player.uniformNumber = command.uniformNumber();
-
-        player.changeSubPositions(command.subPositions());
-
-        player.condition =
-                command.condition() != null
-                    ? command.condition()
-                    : 100;
-
-        player.fatigue =
-                command.fatigue() != null
-                    ? command.fatigue()
-                    : 0;
-
-        player.fitness =
-                command.fitness() != null
-                ? command.fitness()
-                : 100;
-
-        player.injuryStatus =
-                command.injuryStatus() != null
-                    ? command.injuryStatus()
-                    : InjuryStatus.HEALTHY;
-
-        player.injuryDaysLeft =
-                command.injuryDaysLeft() != null
-                    ? command.injuryDaysLeft()
-                    : 0;
-
-        player.satisfaction = 50;
-        player.loyalty = 50;
-
-        player.potential =
-                command.potential() != null
-                    ? command.potential()
-                    : potentialMax;
-
-        player.overall =
-                command.overall() != null
-                    ? command.overall()
-                    : potentialMax - 5;
-
-        player.stamina =
-                command.stamina() != null
-                    ? command.stamina()
-                    : randomStatFrom(50);
-
-        player.composure =
-                command.composure() != null
-                    ? command.composure()
-                    : randomStatFrom(50);
-
-        applyTeam(player, command);
-
-        return player;
+    void initBasic(Integer uniformNumber, List<Position> subPositions) {
+        this.uniformNumber = uniformNumber;
+        changeSubPositions(subPositions);
     }
 
+    void initStatus(Integer condition, Integer fatigue, Integer fitness, InjuryStatus injuryStatus, Integer injuryDaysLeft) {
+        this.condition =
+                condition != null
+                        ? condition
+                        : 100;
+
+        this.fatigue =
+                fatigue != null
+                        ? fatigue
+                        : 0;
+
+        this.fitness =
+                fitness!= null
+                        ? fitness
+                        : 100;
+
+        this.injuryStatus =
+                injuryStatus!= null
+                        ? injuryStatus
+                        : InjuryStatus.HEALTHY;
+
+        this.injuryDaysLeft =
+                injuryDaysLeft != null
+                        ? injuryDaysLeft
+                        : 0;
+    }
+
+    void initMentalDefault() {
+        this.satisfaction = 50;
+        this.loyalty = 50;
+    }
+
+    void initRatings(Integer potential, Integer overall, Integer stamina, Integer composure, int basePotential) {
+        this.potential =
+                potential!= null
+                        ? potential
+                        : basePotential;
+
+        int computedOverall = overall != null ? overall : (basePotential - 5);
+        this.overall = Math.max(0, computedOverall);
+
+        this.stamina =
+                stamina != null
+                        ? stamina
+                        : 0;
+
+        this.composure =
+                composure != null
+                        ? composure
+                        : 0;
+    }
+
+    void initTeam(Long teamId) {
+        this.teamId = teamId;
+    }
+
+    void normalizeInjury() {
+        int days = (injuryDaysLeft == null || injuryDaysLeft < 0) ? 0 : injuryDaysLeft;
+
+        this.injuryDaysLeft = days;
+
+        if (days == 0) {
+            this.injuryStatus = InjuryStatus.HEALTHY;
+        } else if (days <= 7) {
+            this.injuryStatus = InjuryStatus.DAY_TO_DAY;
+        } else if (days <= 30) {
+            this.injuryStatus = InjuryStatus.OUT_WEEKS;
+        } else if (days <= 180) {
+            this.injuryStatus = InjuryStatus.OUT_MONTHS;
+        } else {
+            this.injuryStatus = InjuryStatus.OUT_SEASON;
+        }
+    }
 
     public void changeUniformNumber(Integer newUniformNumber) {
         if (newUniformNumber == null) {
@@ -218,23 +218,10 @@ public class Player extends BaseEntity {
         }
 
         LinkedHashSet<Position> newPositions = new LinkedHashSet<>(positions);
-
         newPositions.remove(this.mainPosition);
         newPositions.remove(null);
 
         this.subPositions = new ArrayList<>(newPositions);
-    }
-
-    private static int randomBetweenInclusive(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(min, max+1);
-    }
-
-    private static int randomStatFrom(int minInclusive) {
-        return randomBetweenInclusive(minInclusive, STAT_MAX);
-    }
-
-    private static void applyTeam(Player player, PlayerCreateCommand command) {
-        player.teamId = command.teamId();
     }
 
     public void transferTo(Long newTeamId) {
