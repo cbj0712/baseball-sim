@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
 class PlayerServiceImplTest {
@@ -62,6 +63,7 @@ class PlayerServiceImplTest {
         createRequest.setOverall(75);
         createRequest.setStamina(80);
         createRequest.setComposure(70);
+        createRequest.setTeamId(1L);
     }
 
     @DisplayName("createPlayer - Player를 생성/저장하고 응답을 반환")
@@ -69,11 +71,13 @@ class PlayerServiceImplTest {
     void createPlayer_success() {
         given(playerRepository.save(any(Player.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
+        given(playerRepository.existsByTeamIdAndUniformNumber(1L, 10)).willReturn(false);
 
         PlayerResponse response = playerService.createPlayer(createRequest);
 
         ArgumentCaptor<Player> captor = ArgumentCaptor.forClass(Player.class);
         then(playerRepository).should().save(captor.capture());
+        then(playerRepository).should().existsByTeamIdAndUniformNumber(1L, 10);
 
         Player saved = captor.getValue();
 
@@ -82,6 +86,49 @@ class PlayerServiceImplTest {
 
         assertThat(response.getName()).isEqualTo(createRequest.getName());
         assertThat(response.getMainPosition()).isEqualTo(createRequest.getMainPosition());
+    }
+
+    @DisplayName("createPlayer - 중복 등번호 부여 시 BusinessException 발생")
+    @Test
+    void createPlayer_exception() {
+        createRequest.setTeamId(1L);
+        createRequest.setUniformNumber(10);
+
+        given(playerRepository.existsByTeamIdAndUniformNumber(1L, 10)).willReturn(true);
+
+        assertThatThrownBy(() -> playerService.createPlayer(createRequest))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining(ErrorCode.DUPLICATE_UNIFORM_NUMBER_IN_TEAM.getMessage());
+
+        then(playerRepository).should(never()).save(any(Player.class));
+    }
+
+    @DisplayName("createPlayer - FA인 경우 중복 체크 스킵")
+    @Test
+    void createPlayer_null_teamId() {
+        createRequest.setTeamId(null);
+        createRequest.setUniformNumber(10);
+
+        given(playerRepository.save(any(Player.class))).willAnswer(inv -> inv.getArgument(0));
+
+        playerService.createPlayer(createRequest);
+
+        then(playerRepository).should(never()).existsByTeamIdAndUniformNumber(any(), any());
+        then(playerRepository).should().save(any(Player.class));
+    }
+
+    @DisplayName("createPlayer - uniformNumber가 null인 경우 중복 체크 스킵")
+    @Test
+    void createPlayer_null_uniformNumber() {
+        createRequest.setTeamId(1L);
+        createRequest.setUniformNumber(null);
+
+        given(playerRepository.save(any(Player.class))).willAnswer(inv -> inv.getArgument(0));
+
+        playerService.createPlayer(createRequest);
+
+        then(playerRepository).should(never()).existsByTeamIdAndUniformNumber(any(), any());
+        then(playerRepository).should().save(any(Player.class));
     }
 
     @DisplayName("getPlayer - 존재하는 선수 정보 반환")

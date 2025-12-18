@@ -141,7 +141,7 @@ public class Player extends BaseEntity {
                         : 100;
 
         this.injuryStatus =
-                injuryStatus!= null
+                injuryStatus != null
                         ? injuryStatus
                         : InjuryStatus.HEALTHY;
 

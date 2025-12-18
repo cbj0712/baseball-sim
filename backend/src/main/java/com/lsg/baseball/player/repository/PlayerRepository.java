@@ -9,4 +9,5 @@ import java.util.List;
 public interface PlayerRepository extends JpaRepository<Player, Long> {
     List<Player> findByMainPosition(Position mainPosition);
     List<Player> findByNameContaining(String name);
+    boolean existsByTeamIdAndUniformNumber(Long teamId, Integer uniformNumber);
 }

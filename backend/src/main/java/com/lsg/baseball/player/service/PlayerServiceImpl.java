@@ -24,6 +24,14 @@ public class PlayerServiceImpl implements PlayerService {
         PlayerCreateCommand command = PlayerCreateCommand.from(request);
 
         Player player = PlayerFactory.create(command);
+
+        if (command.teamId() != null && command.uniformNumber() != null) {
+            if (playerRepository.existsByTeamIdAndUniformNumber(command.teamId(), command.uniformNumber())) {
+                throw new BusinessException(ErrorCode.DUPLICATE_UNIFORM_NUMBER_IN_TEAM);
+            }
+        }
+
+
         Player saved = playerRepository.save(player);
 
         return toResponse(saved);
