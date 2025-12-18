@@ -1,6 +1,8 @@
 package com.lsg.baseball.player.domain;
 
+import com.lsg.baseball.common.api.ErrorCode;
 import com.lsg.baseball.common.entity.BaseEntity;
+import com.lsg.baseball.common.exception.BusinessException;
 import com.lsg.baseball.player.domain.enums.*;
 import com.lsg.baseball.player.domain.support.SubPositionsConverter;
 import jakarta.persistence.*;
@@ -136,7 +138,7 @@ public class Player extends BaseEntity {
                         : 0;
 
         this.fitness =
-                fitness!= null
+                fitness != null
                         ? fitness
                         : 100;
 
@@ -158,7 +160,7 @@ public class Player extends BaseEntity {
 
     void initRatings(Integer potential, Integer overall, Integer stamina, Integer composure, int basePotential) {
         this.potential =
-                potential!= null
+                potential != null
                         ? potential
                         : basePotential;
 
@@ -205,7 +207,7 @@ public class Player extends BaseEntity {
         }
 
         if (newUniformNumber < 0 || newUniformNumber > 200) {
-            throw new IllegalStateException("유니폼 번호로 사용할 수 없는 번호입니다");
+            throw new BusinessException(ErrorCode.INVALID_UNIFORM_NUMBER);
         }
 
         this.uniformNumber = newUniformNumber;
@@ -226,7 +228,7 @@ public class Player extends BaseEntity {
 
     public void transferTo(Long newTeamId) {
         if (newTeamId == null) {
-            throw new IllegalStateException("팀 ID는 null일 수 없습니다");
+            throw new BusinessException(ErrorCode.INVALID_TEAM_ID);
         }
 
         this.teamId = newTeamId;

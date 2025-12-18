@@ -1,5 +1,7 @@
 package com.lsg.baseball.player.domain.support;
 
+import com.lsg.baseball.common.api.ErrorCode;
+import com.lsg.baseball.common.exception.BusinessException;
 import com.lsg.baseball.player.domain.enums.Position;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -34,7 +36,7 @@ public class SubPositionsConverter implements AttributeConverter<List<Position>,
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
                 .map(code -> Position.safeFromCode(code)
-                        .orElseThrow(() -> new IllegalStateException("확인할 수 없는 포지션 코드입니다: " + code))
+                        .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_POSITION_CODE))
                 )
                 .distinct()
                 .collect(Collectors.toList());
