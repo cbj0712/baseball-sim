@@ -12,8 +12,11 @@ public enum ErrorCode {
     VALIDATION_ERROR("VALIDATION_ERROR", "요청 값이 유효하지 않습니다", HttpStatus.BAD_REQUEST),
     DUPLICATE_UNIFORM_NUMBER_IN_TEAM("DUPLICATE_UNIFORM_NUMBER_IN_TEAM", "해당 팀에서 이미 사용 중인 등번호입니다", HttpStatus.CONFLICT),
     INVALID_UNIFORM_NUMBER("INVALID_UNIFORM_NUMBER", "사용 불가능한 등번호입니다", HttpStatus.BAD_REQUEST),
-    INVALID_TEAM_ID("INVALID_TEAM_ID", "팀 ID는 필수입니다", HttpStatus.BAD_REQUEST),
-    INVALID_POSITION_CODE("INVALID_POSITION_CODE", "사용 불가능한 포지션 코드입니다", HttpStatus.BAD_REQUEST);
+    INVALID_TEAM_ID("INVALID_TEAM_ID", "사용 불가능한 팀 ID입니다", HttpStatus.BAD_REQUEST),
+    INVALID_POSITION_CODE("INVALID_POSITION_CODE", "사용 불가능한 포지션 코드입니다", HttpStatus.BAD_REQUEST),
+    TEAM_NOT_FOUND("TEAM_NOT_FOUND", "구단을 찾을 수 없습니다",  HttpStatus.NOT_FOUND),
+    DUPLICATE_TEAM_NAME("DUPLICATE_TEAM_NAME", "이미 사용 중인 구단명입니다", HttpStatus.CONFLICT),
+    DUPLICATE_TEAM_CODE("DUPLICATE_TEAM_CODE", "이미 사용 중인 구단 코드입니다", HttpStatus.CONFLICT);
 
     private final String code;
     private final String message;
